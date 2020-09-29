@@ -1,0 +1,361 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+
+html, body{
+  height:100%
+  margin 0;
+}
+
+header a{
+	font-size: 20px;
+	font-family: 'Bebas Neue', cursive;
+	color: white;
+}
+
+header a:hover{
+	color: gray;
+}
+
+.body-font{
+	background-color: black;
+}
+
+.logo{
+	width: 33%;
+}
+
+.login{
+	font-size: 20px;
+	font-family: 'Bebas Neue', cursive;
+	background-color: white;
+	color: black;
+	border:1px solid black;
+}
+
+.login:hover{
+	background-color: black;
+	color: white;
+	border:1px solid white;
+}
+
+.footerLogo{
+	margin-left: 3%;
+width: 8%;
+
+}
+
+.beatTable{
+	background-color: black;
+ background-image: url("../img/back06.png");
+  background-repeat: repeat;
+  	font-family: 'Bebas Neue', cursive;
+}
+
+.battleList{
+		background-color: black;
+ background-image: url("../img/back07.png");
+  background-repeat: repeat;
+  	font-family: 'Bebas Neue', cursive;
+}
+
+.title{
+	font-size: 60px;
+}
+
+.dev{
+		font-family: 'Bebas Neue', cursive;
+}
+
+.subtitulo{
+	font-family: 'Bebas Neue', cursive;
+	font-size: 20px;
+}
+
+.headline{
+		font-family: 'Bebas Neue', cursive;
+	font-size: 20px;
+}
+
+.tbody{
+	background-color: #00000096;
+}
+
+.thead th{
+	font-size: 18px;
+}
+
+.join{
+	margin-right: 5%;
+}
+
+.stop{
+	margin-left: 1px;
+	font-size: 20px;
+	font-family: 'Bebas Neue', cursive;
+	background-color: red;
+	color: black;
+	border:1px solid black;
+}
+
+.stop:hover{
+		background-color: #000;
+	color: #fff;
+    border: 1px solid white;
+}
+
+.publish{
+	margin-left: 1px;
+	font-size: 20px;
+	font-family: 'Bebas Neue', cursive;
+	background-color: green;
+	color: black;
+	border:1px solid black;
+}
+
+.publish:hover{
+		background-color: #000;
+	color: #fff;
+    border: 1px solid white;
+}
+
+.returnBtn{
+		font-size: 20px;
+	font-family: 'Bebas Neue', cursive;
+	color: red;
+	border:1px solid red;
+}
+
+.returnBtn:hover{
+		background-color: #000;
+	color: #fff;
+    border: 1px solid white;
+}
+
+.active{
+	font-size: 20px;
+	font-family: 'Bebas Neue', cursive;
+	background-color: green;
+	color: black;
+	border:1px solid black;
+}
+
+.active:hover{
+		background-color: #000;
+	color: #fff;
+    border: 1px solid white;
+}
+
+.vote{
+	justify-content: center;
+	width: 15%;
+
+}
+
+.noVote{
+	 color: currentColor;
+  cursor: not-allowed;
+  opacity: 0.5;
+  text-decoration: none;
+}
+
+.title:hover{
+  animation-name: pop-word;
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes pop-word {
+  to {
+    text-shadow:
+      5px 5px 0 #6441a5,
+      10px 10px 0 black
+      /*,
+      15px 15px 0 red,
+      20px 20px 0 brown*/;
+  }
+}
+
+.words span:nth-child(2) { animation-delay: 0.5s; }
+.words span:nth-child(3) { animation-delay: 1s; }
+.words span:nth-child(4) { animation-delay: 1.5s; }
+.words span:nth-child(5) { animation-delay: 2s; }
+
+.help {
+  color: #999;
+}
+
+/* cluck cluck font sizes bawk bagawk smaller screens */
+@media (max-width: 620px) {
+  body {
+    font-size: 1.25rem;
+  }
+  
+  .words {
+    font-size: 3rem;
+  }
+}
+
+.beat-section{
+		background-color: black;
+ background-image: url("../img/back06.png");
+  background-repeat: repeat;
+}
+
+.beat-section h1{
+	font-family: 'Bebas Neue', cursive;
+}
+
+.buttons{
+	display: flex;
+}
+
+.samples{
+		font-size: 20px;
+	font-family: 'Bebas Neue', cursive;
+	background-color: #6441a5;
+	color: black;
+	border:1px solid black;
+}
+
+.title-font{
+	font-family: 'Bebas Neue', cursive;
+}
+
+.icon{
+	color: #6441a5;
+}
+
+.twitch {
+	text-shadow: 2px 2px #6441a5;
+}
+
+.soundcloud{
+text-shadow: 2px 2px #f50;
+}
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #181818;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 40%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.logo-title{
+	font-size: 50px;
+	color: white;
+	font-family: 'Bebas Neue', cursive;
+}
+
+.min-h-screen{
+	    min-height: 0vh;
+}
+
+.discordBtn{
+	margin-top: 6px;
+	background-color: #7289da;
+}
+
+.singinBtn{
+	background-color: #000;
+    border: 1px solid;
+}
+
+.singinBtn:hover{
+	background-color: #fff;
+	color: #000;
+    border: 1px solid black;
+}
+
+.DiscordLogo{
+	margin-top: 7px;
+	width: 8%;
+}
+.publishBtn{
+
+		font-size: 20px;
+		font-family: 'Bebas Neue', cursive;
+		background-color: #000;
+    border: 1px solid;
+}
+
+.publishBtn:hover{
+		background-color: #fff;
+		color: #000;
+    border: 1px solid black;
+}
+
+.draftBtn{
+	font-size: 20px;
+		font-family: 'Bebas Neue', cursive;
+	margin-top: 5px;
+		background-color: #fff;
+		color: #000;
+    border: 1px solid black;
+}
+
+.draftBtn:hover{
+	margin-top: 5px;
+		background-color: #7289da;
+		color: #000;
+    border: 1px solid;
+}
+
+.cancelBtn{
+	width: 10%;
+		font-size: 20px;
+		font-family: 'Bebas Neue', cursive;
+	margin-top: 5px;
+		background-color: red;
+		color: #000;
+    border: 1px solid black;
+}
+
+.cancelBtn:hover{
+		background-color: #fff;
+		color: #000;
+    border: 1px solid black;
+}
+
+.divBtn{
+    position: absolute;
+    right: 9%;
+    margin-top: 0.5%;
+}
+
+
+.listen{
+	background-color: #f50;
+	color: white;
+	width:auto;
+	border-color: #f50;
+}
