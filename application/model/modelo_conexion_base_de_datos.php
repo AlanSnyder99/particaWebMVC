@@ -2,6 +2,7 @@
 
 	class BaseDeDatos extends Model{
 		static function  conectarBD(){
+		
 			$server="localhost";
 			$usuario="root";
 			$clave="";
@@ -11,7 +12,17 @@
 			$conexion->query("SET NAMES UTF8");
   			$conexion->query("SET CHARACTER SET utf8");
 
-		
+		/*
+			$server="localhost";
+			$usuario="root";
+			$clave="";
+			$baseDeDatos="particadb";
+
+			$server="gm.itecno.com.ar";
+			$usuario="alansnyder";
+			$clave="q1w2e3r4";
+			$baseDeDatos="particabb";
+			*/
 
 			return $conexion;
 		}

@@ -2,28 +2,31 @@
 <html>
 <head>
   <title>ParticaBB</title>
-  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+
+ <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.4.6/tailwind.min.css" rel="stylesheet"/>
   <link rel="stylesheet" type="text/css" href="../application/resources/css/style.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>  
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 </head>
 <body>
 <header class="text-gray-500 bg-gray-900 body-font">
   <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-    <a  class="flex title-font font-medium items-center text-white mb-4 md:mb-0 logo">
+    <a href="https://particaartistgroup.com/" target="_blank"  class="flex title-font font-medium items-center text-white mb-4 md:mb-0 logo">
     <img class="logo" src="../application/resources/img/Partica-Logo-Blanco01.png">
 
     </a>
     <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
-       <a href="https://particaartistgroup.com/" target="_blank" class="mr-5 hover:text-gray">Shop</a>
+       <a href="https://particaartistgroup.com/store/" target="_blank" class="mr-5 hover:text-gray">Shop</a>
   		<a href="https://www.twitch.tv/partica" target="_blank" class="mr-5 hover:text-gray twitch">Twitch</a>
        <a href="https://soundcloud.com/particaartistgroup" target="_blank" class="mr-5 hover:text-gray soundcloud">Soundcloud</a>
-      <a  href="" target="_blank" class="mr-5 hover:text-gray">Patreon</a>
+      <!--<a  href="" target="_blank" class="mr-5 hover:text-gray">Patreon</a>-->
     </nav>
      
      <?php
 
 
-      if ($_SESSION['user_is_logged'] == null ) {
+      if ($_SESSION['user_is_logged'] == false ) {
        echo "  <a href='/main/login' id='myBtn'><button onclick='location.href='/main/login'' class='inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0 login'>Login
     </button></a>";
       } else {

@@ -12,6 +12,7 @@ class Router
     }
 
     function start(){
+        
         $routes = Router::parseRoutes();
         $moduleName = Router::extractModuleName($routes);
         $action = Router::extractActionName($routes);

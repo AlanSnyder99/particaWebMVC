@@ -71,7 +71,7 @@
           echo "<tr>
             <td class='px-4 py-3'>".$battles['title']."</td>
             <td class='px-4 py-3'>".$battles['createdDate']."</td>
-            <td class='px-4 py-3'>".$battles['votesCount']."</td>
+            <td class='px-4 py-3'>".$battles['subCount']."</td>
 
            
             <td class='px-4 py-3 text-lg text-white'>".$battles['state']."</td>

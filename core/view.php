@@ -13,7 +13,7 @@ class View{
         include $this->path->getPath("view", $template_view );
     }
 
-    function generateSt($content_view, $data = null, $data2 = null,$data3 = null,$data4 = null, $data5 =null){
+    function generateSt($content_view, $data = null, $data2 = null,$data3 = null,$data4 = null, $data5 =null, $data6 = null){
         include $this->path->getPath("view",$content_view);
     }
 

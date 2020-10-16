@@ -3,13 +3,12 @@
 include 'application/model/model_usuario.php';
 
 
-
-
 class Controller_Main extends Controller{
     
-     
+   
 
     function index(){
+  
     	 $usuario = new Model_Usuario();
     	$battles = $usuario->indexBattles();
         $battlesNoVotes = $usuario->indexBattlesNoVotes();
@@ -125,65 +124,174 @@ class Controller_Main extends Controller{
             //$validationVote = $usuario->validateIfUserCanVote($email);
     	  	$battles = $usuario->oneBattles($battleId);
             $battleSubs = $usuario->battleSubs($battleId);
-
-		 	$this->view->generateSt('battle.php',$battles, $battleSubs);
-    }	
-
-      function vote(){
-
-            $idSubmission = $_GET['idSubmission'];
-            $email = $_GET['email'];
-            $usuario = new Model_Usuario();
-            
+            $validateState = $usuario->battleSubs($battleId);
             $user = $usuario->searchUser($email);
 
             $rows=mysqli_fetch_assoc($user);
 
             $idUser = ($rows['id']);
 
-            $battle = $usuario->searchBattle($idSubmission);
-
-            $rows2=mysqli_fetch_assoc($battle);
-
-            $idBattle = ($rows2['battlesId']);
-
-            $battleId = $idBattle;
-
-            $vote = $usuario->validateVote($idUser,$idSubmission, $idBattle);
-
-            if ($vote == "true") {
-                     $battles = $usuario->oneBattles($battleId);
-                    $battleSubs = $usuario->battleSubs($battleId);
-                     echo'<script type="text/javascript">
-                    alert("Thanks for voting!");
-                    </script>';
-                    $this->view->generateSt('battle.php',$battles, $battleSubs);
-            
-            } elseif ($vote == "false"){
-
-                    $battles = $usuario->oneBattles($battleId);
-                     $battleSubs = $usuario->battleSubs($battleId);
-                      echo'<script type="text/javascript">
-                    alert("You wanna change your vote?");
-                    </script>';
-                     $this->view->generateSt('battle.php',$battles, $battleSubs);
-            }
-
-            /*$battleId = $idBattle ;
-            $battles = $usuario->oneBattles($battleId);
-            $battleSubs = $usuario->battleSubs($battleId);
-
+            $idBattle = $battleId;
+         
+            $votesGrafic = $usuario->votosGrafico($battleId);
            
-            $this->view->generateSt('battle.php',$battles, $battleSubs);*/
+            $vote =  $usuario->validateIfCanReVote($idUser, $idBattle);
 
-        
+            $userVotes =  $usuario->userVotes($idUser);
+		 	
+            $this->view->generateSt('battle.php',$battles, $battleSubs, $vote, $votesGrafic,$validateState, $userVotes);
+    }	
 
-        
+      function vote(){
+
+            $idSubmission = $_GET['idSubmission']; //ID SUBMISSION DE VOTO
+            $email = $_GET['email']; // EMAIL DE EL QUE VOTA
+            $usuario = new Model_Usuario();
+            
+            $user = $usuario->searchUser($email); //BUSCA EL USER QUE VOTA
+
+            $rows=mysqli_fetch_assoc($user);
+
+            $idUser = ($rows['id']); //USER ID
+
+             $userVotes =  $usuario->userVotes($idUser);
+
+            $idSubmissionValidate = $usuario->searchBattle($idSubmission); //BUSCA LA SUBBMISSION
+
+            $rows3=mysqli_fetch_assoc($idSubmissionValidate);
+
+            $idSubmissionValidate2 = ($rows3['id']); //USER ID
+
+
+            if ( $idSubmissionValidate2 == null ||  $idUser == null) {
+              echo'<script type="text/javascript">
+                    alert("Error");
+                    </script>';
+                $battles = $usuario->indexBattles();
+            $battlesNoVotes = $usuario->indexBattlesNoVotes();
+            $this->view->generateSt('index.php', $battles, $battlesNoVotes);
+
+            } else {
+
+                $battle = $usuario->searchBattle($idSubmission); //BUSCA LA BATALLA POR ID SUBMISSION
+
+                $rows2=mysqli_fetch_assoc($battle);
+
+                $idBattle = ($rows2['battlesId']); //TRAEL EL ID DE BATALLA DE LA SUBMISSION 
+
+                $battleId = $idBattle;
+
+                 $idStates =  $usuario->searchBattleWhitId($battleId); 
+                
+                $votesGrafic = $usuario->votosGrafico($battleId); //TRAE LOS VOTOS PARA EL GRAFICO
+
+                 $validateState = $usuario->battleSubs($battleId); //TRAE LOS SUBSMISSIONS PARA VALIDAR EL ESTADO DE LA BATALLA
+                 
+                $usuario->validateVote($idUser,$idSubmission, $battleId); //VALIDA EL VOTO Y VOTA
+
+               $vote =  $usuario->validateIfCanReVote($idUser, $battleId);
+
+                 if ($idStates == 2 || $idStates == 3  ) {
+                   
+                   $battles = $usuario->oneBattles($battleId);
+                   $battleSubs = $usuario->battleSubs($battleId);
+                    echo'<script type="text/javascript">
+                          alert("The battle is Finished");
+                          </script>';
+                      /*$battles = $usuario->allBattles();
+                      $battlesNoVotes = $usuario->allBattlesNoVotes();
+                   $this->view->generateSt('battleList.php',$battles, $battlesNoVotes);*/
+                   $this->view->generateSt('battle.php',$battles, $battleSubs, $vote, $votesGrafic, $validateState,  $userVotes);
+                 } else {
+
+                       if ($vote == "false") {
+                               $battles = $usuario->oneBattles($battleId);
+                              $battleSubs = $usuario->battleSubs($battleId);
+                             /* echo'<script type="text/javascript">
+                              alert("Thanks for vote, You cannot vote again");
+                              </script>';*/
+                                /*$battles = $usuario->allBattles();
+                            $battlesNoVotes = $usuario->allBattlesNoVotes();
+                         $this->view->generateSt('battleList.php',$battles, $battlesNoVotes);*/
+                              $this->view->generateSt('battle.php',$battles, $battleSubs, $vote,$votesGrafic, $validateState,  $userVotes);
+                      } else {
+                            $battles = $usuario->oneBattles($battleId);
+                              $battleSubs = $usuario->battleSubs($battleId);
+                           /* echo'<script type="text/javascript">
+                              alert("You can vote more times");
+                              </script>';*/
+                                /*$battles = $usuario->allBattles();
+                      $battlesNoVotes = $usuario->allBattlesNoVotes();
+                   $this->view->generateSt('battleList.php',$battles, $battlesNoVotes);*/
+                              $this->view->generateSt('battle.php',$battles, $battleSubs, $vote, $votesGrafic, $validateState, $userVotes);
+                      }
+
+                 }
+
+            }
+          
 
             
-
            
     }   
+
+    function changeVote(){
+
+        $usuario = new Model_Usuario();
+        $battleId = $_GET['battleId'];
+        $email = $_GET['email'];
+        $submissionsId = $_GET['submissionsId'];
+
+        //free result y store result.
+
+        $user = $usuario->searchUser($email);
+
+        $rows=mysqli_fetch_assoc($user);
+
+        $idUser = ($rows['id']);
+
+        $userVotes =  $usuario->userVotes($idUser); //DRAMA
+
+        $idStates =  $usuario->searchBattleWhitId($battleId); 
+
+        $votesGrafic = $usuario->votosGrafico($battleId);
+        $validateState = $usuario->battleSubs($battleId);
+        $idBattle =  $battleId;
+
+         if ($idStates == 2 || $idStates == 3  ) {
+
+        
+
+            $vote =  $usuario->validateIfCanReVote($idUser, $idBattle);
+            $battles = $usuario->oneBattles($battleId);
+            $battleSubs = $usuario->battleSubs($battleId);
+              echo'<script type="text/javascript">
+                alert("The battle is Finished");
+                </script>';
+              /*    $battles = $usuario->allBattles();
+        $battlesNoVotes = $usuario->allBattlesNoVotes();
+     $this->view->generateSt('battleList.php',$battles, $battlesNoVotes);*/
+                $this->view->generateSt('battle.php',$battles, $battleSubs, $vote, $votesGrafic, $validateState, $userVotes);
+
+         } else {
+
+            $usuario->deleteVoteOfUser($idUser,  $battleId,  $submissionsId);
+
+            $vote =  $usuario->validateIfCanReVote($idUser, $idBattle);
+            $battles = $usuario->oneBattles($battleId);
+            $battleSubs = $usuario->battleSubs($battleId);
+              /*echo'<script type="text/javascript">
+                alert("Now you can Vote again");
+                </script>';*/
+                 /* $battles = $usuario->allBattles();
+                  $battlesNoVotes = $usuario->allBattlesNoVotes();
+               $this->view->generateSt('battleList.php',$battles, $battlesNoVotes);*/
+                $this->view->generateSt('battle.php',$battles, $battleSubs, $vote, $votesGrafic, $validateState, $userVotes);
+
+         }
+        
+
+    }
 
     function finishBattle(){
 			$battleId = $_GET['id'];
@@ -215,12 +323,64 @@ class Controller_Main extends Controller{
     }
 
     function addSubmission(){
+    $usuario = new Model_Usuario();
+    $nicknameValidated = [];
+    $iframeCodeValidated = [];
+    $idBattle = $_POST["idBattle"];
+
+    $array_num = count($_POST["soundcloudLink"]);
+
+    for ($i=0; $i < $array_num; ++$i) { 
+        if($_POST["nickname"][$i] != null && $_POST["soundcloudLink"][$i] != null) {
+            $iframeCode = $usuario->createSoundcloudIframe($_POST["soundcloudLink"][$i]);
+            array_push($iframeCodeValidated,$iframeCode);
+            array_push($nicknameValidated,$_POST["nickname"][$i]);
+        }
+    }
+
+
+
+    if (count($iframeCodeValidated)) {
+        $usuario->addSubmissions($nicknameValidated, $iframeCodeValidated,  $idBattle);
+    } else {
+        header("JSON");
+        echo json_encode(["msg" => "Error"]);
+        die();
+    }
+
+    
+}
+
+   /* function addSubmission(){
+
+       $usuario = new Model_Usuario();
        $nickname = $_POST["nickname"];
        $soundcloudLink = $_POST["soundcloudLink"];
+
        $idBattle = $_POST["idBattle"];
 
-        $usuario = new Model_Usuario();
-        $usuario->addSubmissions($nickname, $soundcloudLink,  $idBattle);
+        $iframeCodeArray = array();
+
+       $array_num = count($soundcloudLink);
+
+    
+
+            for ($i=0; $i < $array_num; ++$i) { 
+               
+            $iframeCode = $usuario->createSoundcloudIframe($soundcloudLink[$i]);
+             array_push($iframeCodeArray,$iframeCode);
+                //$iframeCode[] = $usuario->createSoundcloudIframe($soundcloudLink[$i]);
+               
+          }
+
+           $usuario->addSubmissions($nickname, $iframeCodeArray,  $idBattle);
+
+    }*/
+
+    function getVotesForBattle(){
+         $usuario = new Model_Usuario();
+         $battleId = $_GET['id'];
+         echo $battleId;
     }
     		
         

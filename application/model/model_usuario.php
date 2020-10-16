@@ -161,21 +161,25 @@ class Model_Usuario extends Model{
 
 		$db=BaseDeDatos::conectarBD();
 
-		$sql = 'SELECT DISTINCT COUNT(v.id) as votesCount , b.id as idBattle, b.title as title, b.rules as rules, b.createdDate as createdDate, b.idStates as idStates, b.samplesLink as samplesLink, b.maxVotes as maxVotes, b.tags as tags, s.state as state  
+		$sql = '	SELECT DISTINCT COUNT(su.id) as subCount , b.id as idBattle, b.title as title, b.rules as rules, b.createdDate as createdDate, b.idStates as idStates, b.samplesLink as samplesLink, b.maxVotes as maxVotes, b.tags as tags, s.state as state FROM battles as b INNER JOIN states as s on b.idStates = s.id INNER JOIN submissions as su on su.battlesId = b.id GROUP BY b.id ORDER BY b.createdDate desc';
+
+		/*$sql = 'SELECT DISTINCT COUNT(v.id) as votesCount , b.id as idBattle, b.title as title, b.rules as rules, b.createdDate as createdDate, b.idStates as idStates, b.samplesLink as samplesLink, b.maxVotes as maxVotes, b.tags as tags, s.state as state  
 			FROM battles as b 
 			INNER JOIN states as s on b.idStates = s.id 
 			INNER JOIN submissions as su on su.battlesId = b.id
 			INNER JOIN votes as v on v.submissionsId = su.id
-				/*WHERE b.idStates = 1 OR b.idStates = 2 */
+				
 			GROUP BY b.id
-			ORDER BY b.createdDate desc';
+			ORDER BY b.createdDate desc';*/
 
 			$result=mysqli_query($db, $sql);
 
 		
 			return $result;
 		
-
+			/*
+			SELECT DISTINCT COUNT(su.id) as subCount , b.id as idBattle, b.title as title, b.rules as rules, b.createdDate as createdDate, b.idStates as idStates, b.samplesLink as samplesLink, b.maxVotes as maxVotes, b.tags as tags, s.state as state FROM battles as b INNER JOIN states as s on b.idStates = s.id INNER JOIN submissions as su on su.battlesId = b.id GROUP BY b.id ORDER BY b.createdDate desc
+			*/
 		
 
 	}
@@ -200,7 +204,9 @@ class Model_Usuario extends Model{
 			  ORDER BY b.createdDate desc';*/
 
 			 $sql='
-			SELECT DISTINCT  b.id as idBattle, b.title as title, b.rules as rules, b.createdDate as createdDate, b.idStates as idStates, b.samplesLink as samplesLink, b.maxVotes as maxVotes, b.tags as tags, s.state as state  
+			SELECT DISTINCT b.id as idBattle, b.title as title, b.rules as rules, b.createdDate as createdDate, b.idStates as idStates, b.samplesLink as samplesLink, b.maxVotes as maxVotes, b.tags as tags, s.state as state FROM battles as b INNER JOIN states as s on b.idStates = s.id WHERE NOT EXISTS ( SELECT * FROM submissions as su WHERE su.battlesId = b.id ) ORDER BY b.createdDate desc';
+
+		/*SELECT DISTINCT  b.id as idBattle, b.title as title, b.rules as rules, b.createdDate as createdDate, b.idStates as idStates, b.samplesLink as samplesLink, b.maxVotes as maxVotes, b.tags as tags, s.state as state  
 						FROM battles as b 
 						INNER JOIN states as s on b.idStates = s.id 
 						INNER JOIN submissions as su on su.battlesId = b.id
@@ -212,9 +218,8 @@ class Model_Usuario extends Model{
                 WHERE v.submissionsId = su.id
             )
 						     
-			  ORDER BY b.createdDate desc';
+			  ORDER BY b.createdDate desc*/
 
-		
 
 			$result=mysqli_query($db, $sql);
 
@@ -228,14 +233,7 @@ class Model_Usuario extends Model{
 
 	$db=BaseDeDatos::conectarBD();
 
-		$sql = 'SELECT DISTINCT COUNT(v.id) as votesCount , b.id as idBattle, b.title as title, b.rules as rules, b.createdDate as createdDate, b.idStates as idStates, b.samplesLink as samplesLink, b.maxVotes as maxVotes, b.tags as tags, s.state as state  
-			FROM battles as b 
-			INNER JOIN states as s on b.idStates = s.id 
-			INNER JOIN submissions as su on su.battlesId = b.id
-			INNER JOIN votes as v on v.submissionsId = su.id
-			/*WHERE b.idStates = 1 OR b.idStates = 2 */
-			GROUP BY b.id
-			ORDER BY b.createdDate desc';
+	$sql = '	SELECT DISTINCT COUNT(su.id) as subCount , b.id as idBattle, b.title as title, b.rules as rules, b.createdDate as createdDate, b.idStates as idStates, b.samplesLink as samplesLink, b.maxVotes as maxVotes, b.tags as tags, s.state as state FROM battles as b INNER JOIN states as s on b.idStates = s.id INNER JOIN submissions as su on su.battlesId = b.id GROUP BY b.id ORDER BY b.createdDate desc';
 
 		$result=mysqli_query($db, $sql);
 
@@ -278,20 +276,8 @@ class Model_Usuario extends Model{
 		      
 			  ORDER BY b.createdDate desc';*/
 
-			$sql='
-			SELECT DISTINCT  b.id as idBattle, b.title as title, b.rules as rules, b.createdDate as createdDate, b.idStates as idStates, b.samplesLink as samplesLink, b.maxVotes as maxVotes, b.tags as tags, s.state as state  
-						FROM battles as b 
-						INNER JOIN states as s on b.idStates = s.id 
-						INNER JOIN submissions as su on su.battlesId = b.id
-			            WHERE NOT EXISTS
-            
-            (
-            SELECT *
-                FROM votes as v
-                WHERE v.submissionsId = su.id
-            )
-						     
-			  ORDER BY b.createdDate desc';
+			 $sql='
+			SELECT DISTINCT b.id as idBattle, b.title as title, b.rules as rules, b.createdDate as createdDate, b.idStates as idStates, b.samplesLink as samplesLink, b.maxVotes as maxVotes, b.tags as tags, s.state as state FROM battles as b INNER JOIN states as s on b.idStates = s.id WHERE NOT EXISTS ( SELECT * FROM submissions as su WHERE su.battlesId = b.id ) ORDER BY b.createdDate desc';
 
 			$result=mysqli_query($db, $sql);
 
@@ -327,7 +313,14 @@ class Model_Usuario extends Model{
 
 			$sql = 'DELETE FROM battles WHERE battles.id = '.$battleId.'';
 
+			$sql2 = 'DELETE FROM submissions WHERE battlesId = '.$battleId.'';
+
+			$sql3 = 'DELETE v FROM votes as v INNER JOIN submissions as s ON v.submissionsId = s.id WHERE s.battlesId = '.$battleId.' ';
+
 		 	mysqli_query($db, $sql);
+		 	mysqli_query($db, $sql3);
+		 	mysqli_query($db, $sql2);
+		 	
 	}
 
 	public function searchUser($email){
@@ -352,20 +345,34 @@ class Model_Usuario extends Model{
 		return $result;	
 	}
 
-	public function validateVote($idUser,$idSubmission,$idBattle){
+	public function searchBattleWhitId($battleId){
+
+		$db=BaseDeDatos::conectarBD();
+
+		$sql = 'SELECT idStates FROM battles WHERE id = '.$battleId.' ';
+
+		$result=mysqli_query($db, $sql);
+
+		 $rows=mysqli_fetch_assoc($result);
+
+		  $idStates = ($rows['idStates']);
+
+		
+		return $idStates;	
+	}
+
+
+
+	public function validateVote($idUser,$idSubmission,$battleId){
 		
 		 $db=BaseDeDatos::conectarBD();
-		//hacer count de los votos para ver si el user puede volver a votar con respecto a el maxVotes
-		//ver si el user ya voto y puede volver a votar
-		//generar voto
-		//en caso de error devolver true o false
 
 		$maxVotes = 'SELECT b.maxVotes FROM battles as b
 						INNER JOIN submissions as s 
 						on s.battlesId = b.id
 						INNER JOIN votes as v
 						on v.submissionsId = s.id
-						WHERE s.battlesId = '.$idBattle.'
+						WHERE s.battlesId = '.$battleId.'
 						LIMIT 1';
 
 		$maxVotesResult=mysqli_query($db, $maxVotes);	
@@ -374,48 +381,43 @@ class Model_Usuario extends Model{
 
          $maxVotes = ($rows['maxVotes']); //MAXIMO VOTOS BATALLA
    
+////////////////////////////////////////////////////////////////////////
 
-		$votesUser = 'SELECT * FROM battles as b
+		$votesUser = 'SELECT * FROM votes as v
 			INNER JOIN submissions as s 
-			on s.battlesId = b.id
-			INNER JOIN votes as v
 			on v.submissionsId = s.id
-			WHERE v.userId = '.$idUser.' AND s.battlesId  = '.$idBattle.'';		
+			WHERE v.userId = '.$idUser.' AND s.battlesId  = '.$battleId.'';		
 		
 
 		$votesUserResult=mysqli_query($db, $votesUser);	
 
-		$countVotesUserResult = mysqli_num_rows ($votesUserResult); //CANTIDAD VOTOS USER EN LA BATALLA
+		$countVotes = mysqli_num_rows ($votesUserResult); //VALIDA LA CANTIDAD VOTOS USER EN LA BATALLA
 
 
-		$sql = 'SELECT * FROM votes as v
-				INNER JOIN submissions as s on s.id = v.submissionsId
-				WHERE v.userId = 6 AND s.battlesId = '.$idBattle.'';
-
-		$votosDelUser=mysqli_query($db, $sql);
-
-		$countVotes = mysqli_num_rows ($votosDelUser);
-
-		if ($countVotes == 0) {
+		if ($countVotes == 0) { //TODAVIA NO TIENE VOTOS
 
 				$sql2 = 'INSERT INTO votes (id, userId, submissionsId) VALUES (NULL, '.$idUser.', '.$idSubmission.')';
 
-				mysqli_query($db, $sql2);
-				echo "voto añadido";
-				return "true";
-
-		} elseif($countVotes > 0) {
-
-			 if ($countVotesUserResult < $maxVotes ) {
-			 	$sql2 = 'INSERT INTO votes (id, userId, submissionsId) VALUES (NULL, '.$idUser.', '.$idSubmission.')';
+				
 
 				mysqli_query($db, $sql2);
-				echo "voto añadido";
-				return "true";
+				echo "Vote Inserted";
+			
+
+		} elseif($countVotes > 0) { //OSEA QUE YA VOTO
+
+			 if ($countVotes < $maxVotes ) {
+			 	$sql3 = 'INSERT INTO votes (id, userId, submissionsId) VALUES (NULL, '.$idUser.', '.$idSubmission.')';
+
+			 		
+
+				mysqli_query($db, $sql3);
+				echo "Vote Inserted";
+				//return "true";
 			
 			 } else {
-			 	echo "no se puede votar mas";
-			 	return "false";
+			 	echo "Your maximum votes is complete";
+			 	//return "false";
 
 			 }
 
@@ -424,6 +426,64 @@ class Model_Usuario extends Model{
 		}
 
 
+	}
+
+	public function validateIfCanReVote($idUser, $battleId){
+
+		 $db=BaseDeDatos::conectarBD();
+
+		$maxVotes = 'SELECT *  FROM battles WHERE id = '. $battleId.'';
+
+		$maxVotesResult=mysqli_query($db, $maxVotes);	
+		
+		$rows=mysqli_fetch_assoc($maxVotesResult);
+
+         $maxVotes = ($rows['maxVotes']); //MAXIMO VOTOS BATALLA
+
+
+		$votesUser = 'SELECT * FROM votes as v
+			INNER JOIN submissions as s 
+			on v.submissionsId = s.id
+			WHERE v.userId = '.$idUser.' AND s.battlesId  = '.$battleId.'';		
+
+
+		$votesUserResult=mysqli_query($db, $votesUser);	
+
+
+		$countVotesUserResult = mysqli_num_rows ($votesUserResult); //CANTIDAD VOTOS USER EN LA BATALLA
+
+		if($countVotesUserResult <  $maxVotes){
+			return "true";
+		} elseif ($countVotesUserResult >=  $maxVotes) {
+			return "false";
+		}
+
+	}
+
+	public function deleteVoteOfUser($idUser, $battleId, $submissionsId){
+
+		$db=BaseDeDatos::conectarBD();
+
+		$sql='SELECT  v.id as idVotes
+				FROM battles as b 
+				INNER JOIN submissions as s 
+				on s.battlesId = b.id
+				INNER JOIN votes as v 
+				on v.submissionsId = s.id
+				WHERE v.userId = '.$idUser.' AND s.id = '.$submissionsId.'
+				ORDER BY v.id asc ';
+
+
+		$result = mysqli_query($db, $sql);
+
+		$rows=mysqli_fetch_assoc($result);
+
+         $idVotes = ($rows['idVotes']); 
+
+         $deleteSql = 'DELETE FROM votes WHERE votes.id = '.$idVotes.'';
+
+         mysqli_query($db, $deleteSql);
+				
 	}
 
 	public function finishBattle($battleId){
@@ -460,14 +520,14 @@ class Model_Usuario extends Model{
 
 		$db=BaseDeDatos::conectarBD();
 
-		$sql = 'SELECT s.id as id, s.battlesId as idBattle, s.userId as userId, s.nickname as nickname, s.soundcloudLink as soundcloudLink, s.voteCount as voteCount, b.idStates as idStates FROM submissions as s INNER JOIN battles as b on b.id = s.battlesId WHERE battlesId = '.$battleId.' ';
-
+		$sql = 'SELECT s.id as id, s.battlesId as idBattle, s.nickname as nickname, s.soundcloudLink as soundcloudLink, s.voteCount as voteCount, b.idStates as idStates FROM submissions as s INNER JOIN battles as b on b.id = s.battlesId WHERE battlesId = '.$battleId.' ORDER BY s.nickname asc';
+		
 		$result=mysqli_query($db, $sql);
 
 		return $result;
 	}
 
-	public function addSubmissions($nickname, $soundcloudLink, $idBattle){
+	public function addSubmissions($nickname, $iframeCodeValidated, $idBattle){
 
 		$db=BaseDeDatos::conectarBD();
 
@@ -480,7 +540,7 @@ class Model_Usuario extends Model{
 			 for($i=0; $i<$number; $i++) {
 
 			 		
-			 		$sql= "INSERT INTO submissions (id, battlesId, userId, nickname, soundcloudLink, voteCount) VALUES (NULL, ".$idBattle.", NULL, '".mysqli_real_escape_string($db, $nickname[$i])."', '".mysqli_real_escape_string($db, $soundcloudLink[$i])."', NULL);";
+			 		$sql= "INSERT INTO submissions (id, battlesId, nickname, soundcloudLink, voteCount) VALUES (NULL, ".$idBattle.", '".mysqli_real_escape_string($db, $nickname[$i])."', '".mysqli_real_escape_string($db, $iframeCodeValidated[$i])."', NULL);";
 
 			 	
 
@@ -490,12 +550,90 @@ class Model_Usuario extends Model{
 			 	
 
 			 }
-			    echo "Data Inserted"; 
+			   // echo "Data Inserted"; 
 			
-		} else {
-				echo "No Submissions";
 		}
 	}
+
+	public function votosGrafico($battleId){
+
+			$db=BaseDeDatos::conectarBD();
+		
+		$sql='SELECT s.nickname as nickname, COUNT(v.id) as votes FROM battles as b INNER JOIN submissions as s ON s.battlesId = b.id INNER JOIN votes as v ON v.submissionsId = s.id 
+			WHERE s.battlesId = '.$battleId.'
+			GROUP BY s.nickname';
+	
+			//echo $sql;
+		$result=mysqli_query($db, $sql);
+		 
+		 return $result;	
+
+	}
+
+	public function createSoundcloudIframe($soundcloudLink){
+
+			$db=BaseDeDatos::conectarBD();
+
+			//$array_num = count($soundcloudLink);
+
+			//$iframeCode = array();
+
+			//for ($i=0; $i < $array_num; ++$i) { 
+                   
+              $resolveUrl = "https://api.soundcloud.com/resolve.json?url=".$soundcloudLink."&client_id=d438c4a17e1716c6db0c5fbefc2c8876";
+
+			$response = $this->apiRequest($resolveUrl);
+
+			$iframeCode = '<iframe width="100%" height="150px" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url='. urlencode($response->uri) .'&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>';
+
+			//echo $iframeCodeUrl;
+
+			 //$iframeCode[] = $iframeCodeUrl;  
+			//array_push($iframeCode, "".$iframeCodeUrl."");
+
+
+               //}
+
+               //print_r($iframeCode);
+	
+			return $iframeCode;
+          
+		
+	}
+
+
+				function apiRequest($url, $post=FALSE, $headers=array()) {
+		  $ch = curl_init($url);
+		  curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+		  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+
+		  $response = curl_exec($ch);
+
+
+		  if($post)
+		    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
+
+		  $headers[] = 'Accept: application/json';
+
+		  curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		  $response = curl_exec($ch);
+		  return json_decode($response);
+		}
+
+		function userVotes($idUser){
+
+			$db=BaseDeDatos::conectarBD();
+		
+		$sql='SELECT * FROM votes WHERE userId = '.$idUser.' ';
+	
+			//echo $sql;
+		$result=mysqli_query($db, $sql);
+		 
+		 return $result;	
+
+		}
 
 } 
 

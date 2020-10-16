@@ -1,4 +1,5 @@
-QUE PUEDA CAMBIAR VOTO.
-REVEER LOS LISTADOS QUE TRAE.
 
-GRAFICO DE VOTACIONES, VOTACIONES EN TIEMPO REAL;
+Cada vez que vota vuelve al listado.
+
+
+Solo mostrar el ganador cuando este finalizada

@@ -1,9 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
 
-html, body{
-  height:100%
-  margin 0;
+html, body
+{
+	background-color: black;
+ background-image: url("../img/back06.png");
+  background-repeat: repeat;
+  	font-family: 'Bebas Neue', cursive;
+    height: 100%;
 }
 
 header a{
@@ -18,6 +22,12 @@ header a:hover{
 
 .body-font{
 	background-color: black;
+}
+
+#footer{
+	/*  position: fixed;
+  bottom: 0;
+  width: 100%;*/
 }
 
 .logo{
@@ -45,10 +55,7 @@ width: 8%;
 }
 
 .beatTable{
-	background-color: black;
- background-image: url("../img/back06.png");
-  background-repeat: repeat;
-  	font-family: 'Bebas Neue', cursive;
+	background:none;
 }
 
 .battleList{
@@ -358,4 +365,44 @@ text-shadow: 2px 2px #f50;
 	color: white;
 	width:auto;
 	border-color: #f50;
+}
+
+@media (max-width: 620px) {
+  #chart_div{
+	width: 200px; height: auto; margin-left: 0%; 
+}
+}
+
+#chart_div{
+	width: 1000px; height: 400px; justify-content: center; margin-left:10%; 
+}
+
+.loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+  position: absolute;
+  left: 46%;
+  top: 43%;
+ display: none;
+}
+
+.activeLoader{
+	display: block;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.change{
+	font-size: 15px;
+    font-family: 'Bebas Neue', cursive;
+    background-color: white;
+    color: black;
+  
 }

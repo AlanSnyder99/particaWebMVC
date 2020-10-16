@@ -1,4 +1,4 @@
-<footer class="text-gray-500 bg-gray-900 body-font">
+<footer id="footer" class="text-gray-500 bg-gray-900 body-font">
   <div class="container px-5 py-8 mx-auto flex items-center sm:flex-row flex-col">
     <a href="https://www.linkedin.com/in/alansnyder1999/" target="_blank" class="dev flex title-font font-medium items-center md:justify-start justify-center text-white">
             <span class="ml-2 text-xl">Developed by </span>
@@ -69,14 +69,18 @@ window.onclick = function(event) {
            var button_id = $(this).attr("id");   
            $('#row'+button_id+'').remove();  
       });  
-      $('#submit').click(function(){            
+
+      $('#submit').click(function(){ 
+
+        $('#loader').addClass('activeLoader'); 
+
            $.ajax({  
                 url:"/main/addSubmission",  
                 method:"POST",  
                 data:$('#add_sub').serialize(),  
                 success:function(data)  
                 {  
-                     alert(data);  
+                     //alert(data);  
                      $('#add_sub')[0].reset();  
                      location.reload(true); 
                 }  

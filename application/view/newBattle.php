@@ -1,8 +1,10 @@
-<?php include 'header.php';
+<?php 
 
- if (($_SESSION["isAdmin"]) == 0 ) {
-     header("location:/index");
+ if (($_SESSION["isAdmin"]) == 0 || $_SESSION['user_is_logged'] == false ) {
+     header("location:/main/index");
 }
+
+include 'header.php';
 
   ?>
 <section class="text-gray-500 bg-gray-900 body-font relative battleList">

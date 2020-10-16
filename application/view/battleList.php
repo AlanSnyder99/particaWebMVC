@@ -1,6 +1,6 @@
 <?php
 
- if (($_SESSION["isAdmin"]) == 0 && $_SESSION['user_is_logged'] = null ) {
+ if (($_SESSION["isAdmin"]) == 0 || $_SESSION['user_is_logged'] == false ) {
      header("location:/main/index");
 }
 
@@ -86,9 +86,9 @@
          <?php if(mysqli_num_rows($data) >= 1){
          while($battles = mysqli_fetch_assoc($data)){ 
           echo "<tr>
-            <td class='px-4 py-3'>".$battles['title']."</td>
-            <td class='px-4 py-3'>".$battles['createdDate']."</td>
-            <td class='px-4 py-3'>".$battles['votesCount']."</td>
+            <td class='px-4 py-3 text-white'>".$battles['title']."</td>
+            <td class='px-4 py-3 text-white'>".$battles['createdDate']."</td>
+            <td class='px-4 py-3 text-white'>".$battles['subCount']."</td>
             <td class='px-4 py-3 text-lg text-white'>".$battles['state']."</td>";
             
             if (($battles['idStates']) == 1 ){
