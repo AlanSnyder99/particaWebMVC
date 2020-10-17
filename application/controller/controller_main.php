@@ -150,11 +150,14 @@ class Controller_Main extends Controller{
             
             $user = $usuario->searchUser($email); //BUSCA EL USER QUE VOTA
 
+          
             $rows=mysqli_fetch_assoc($user);
 
             $idUser = ($rows['id']); //USER ID
 
+
              $userVotes =  $usuario->userVotes($idUser);
+        
 
             $idSubmissionValidate = $usuario->searchBattle($idSubmission); //BUSCA LA SUBBMISSION
 
@@ -162,12 +165,11 @@ class Controller_Main extends Controller{
 
             $idSubmissionValidate2 = ($rows3['id']); //USER ID
 
-
             if ( $idSubmissionValidate2 == null ||  $idUser == null) {
               echo'<script type="text/javascript">
                     alert("Error");
                     </script>';
-                $battles = $usuario->indexBattles();
+            $battles = $usuario->indexBattles();
             $battlesNoVotes = $usuario->indexBattlesNoVotes();
             $this->view->generateSt('index.php', $battles, $battlesNoVotes);
 
@@ -181,20 +183,24 @@ class Controller_Main extends Controller{
 
                 $battleId = $idBattle;
 
+                 $battles = $usuario->oneBattles($battleId);
+                
+                $battleSubs = $usuario->battleSubs($battleId); 
+
                  $idStates =  $usuario->searchBattleWhitId($battleId); 
+
                 
                 $votesGrafic = $usuario->votosGrafico($battleId); //TRAE LOS VOTOS PARA EL GRAFICO
+                //SI NO HAY VOTOS NO TRAE NADA
+        
 
                  $validateState = $usuario->battleSubs($battleId); //TRAE LOS SUBSMISSIONS PARA VALIDAR EL ESTADO DE LA BATALLA
-                 
-                $usuario->validateVote($idUser,$idSubmission, $battleId); //VALIDA EL VOTO Y VOTA
 
-               $vote =  $usuario->validateIfCanReVote($idUser, $battleId);
+
 
                  if ($idStates == 2 || $idStates == 3  ) {
                    
-                   $battles = $usuario->oneBattles($battleId);
-                   $battleSubs = $usuario->battleSubs($battleId);
+                  
                     echo'<script type="text/javascript">
                           alert("The battle is Finished");
                           </script>';
@@ -204,9 +210,14 @@ class Controller_Main extends Controller{
                    $this->view->generateSt('battle.php',$battles, $battleSubs, $vote, $votesGrafic, $validateState,  $userVotes);
                  } else {
 
+
+                      $usuario->validateVote($idUser,$idSubmission, $battleId); //VALIDA EL VOTO Y VOTA
+
+                    
+                     $vote =  $usuario->validateIfCanReVote($idUser, $battleId);
+
                        if ($vote == "false") {
-                               $battles = $usuario->oneBattles($battleId);
-                              $battleSubs = $usuario->battleSubs($battleId);
+                          
                              /* echo'<script type="text/javascript">
                               alert("Thanks for vote, You cannot vote again");
                               </script>';*/
@@ -215,8 +226,7 @@ class Controller_Main extends Controller{
                          $this->view->generateSt('battleList.php',$battles, $battlesNoVotes);*/
                               $this->view->generateSt('battle.php',$battles, $battleSubs, $vote,$votesGrafic, $validateState,  $userVotes);
                       } else {
-                            $battles = $usuario->oneBattles($battleId);
-                              $battleSubs = $usuario->battleSubs($battleId);
+                      
                            /* echo'<script type="text/javascript">
                               alert("You can vote more times");
                               </script>';*/
@@ -249,22 +259,33 @@ class Controller_Main extends Controller{
         $rows=mysqli_fetch_assoc($user);
 
         $idUser = ($rows['id']);
-
-        $userVotes =  $usuario->userVotes($idUser); //DRAMA
-
+  
+        $userVotes =  $usuario->userVotes($idUser); //
+       
         $idStates =  $usuario->searchBattleWhitId($battleId); 
 
         $votesGrafic = $usuario->votosGrafico($battleId);
-        $validateState = $usuario->battleSubs($battleId);
+
+        $validateState = $usuario->battleSubs($battleId); //Trae las submissions
+
+      
         $idBattle =  $battleId;
+
+
+        $vote =  $usuario->validateIfCanReVote($idUser, $idBattle);
+
+
+        $battles = $usuario->oneBattles($battleId);
+
+
+        $battleSubs = $usuario->battleSubs($battleId);
+
 
          if ($idStates == 2 || $idStates == 3  ) {
 
         
 
-            $vote =  $usuario->validateIfCanReVote($idUser, $idBattle);
-            $battles = $usuario->oneBattles($battleId);
-            $battleSubs = $usuario->battleSubs($battleId);
+   
               echo'<script type="text/javascript">
                 alert("The battle is Finished");
                 </script>';
@@ -276,10 +297,6 @@ class Controller_Main extends Controller{
          } else {
 
             $usuario->deleteVoteOfUser($idUser,  $battleId,  $submissionsId);
-
-            $vote =  $usuario->validateIfCanReVote($idUser, $idBattle);
-            $battles = $usuario->oneBattles($battleId);
-            $battleSubs = $usuario->battleSubs($battleId);
               /*echo'<script type="text/javascript">
                 alert("Now you can Vote again");
                 </script>';*/

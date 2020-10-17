@@ -3,11 +3,11 @@
 <head>
   <title>ParticaBB</title>
 
- <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.4.6/tailwind.min.css" rel="stylesheet"/>
-  <link rel="stylesheet" type="text/css" href="../application/resources/css/style.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>  
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>  
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.4.6/tailwind.min.css" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="../application/resources/css/style.css">
 </head>
 <body>
 <header class="text-gray-500 bg-gray-900 body-font">

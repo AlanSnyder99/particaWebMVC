@@ -380,6 +380,8 @@ class Model_Usuario extends Model{
 		$rows=mysqli_fetch_assoc($maxVotesResult);
 
          $maxVotes = ($rows['maxVotes']); //MAXIMO VOTOS BATALLA
+
+
    
 ////////////////////////////////////////////////////////////////////////
 
@@ -392,7 +394,6 @@ class Model_Usuario extends Model{
 		$votesUserResult=mysqli_query($db, $votesUser);	
 
 		$countVotes = mysqli_num_rows ($votesUserResult); //VALIDA LA CANTIDAD VOTOS USER EN LA BATALLA
-
 
 		if ($countVotes == 0) { //TODAVIA NO TIENE VOTOS
 
@@ -441,6 +442,8 @@ class Model_Usuario extends Model{
          $maxVotes = ($rows['maxVotes']); //MAXIMO VOTOS BATALLA
 
 
+
+
 		$votesUser = 'SELECT * FROM votes as v
 			INNER JOIN submissions as s 
 			on v.submissionsId = s.id
@@ -479,6 +482,7 @@ class Model_Usuario extends Model{
 		$rows=mysqli_fetch_assoc($result);
 
          $idVotes = ($rows['idVotes']); 
+
 
          $deleteSql = 'DELETE FROM votes WHERE votes.id = '.$idVotes.'';
 
@@ -563,7 +567,7 @@ class Model_Usuario extends Model{
 			WHERE s.battlesId = '.$battleId.'
 			GROUP BY s.nickname';
 	
-			//echo $sql;
+	
 		$result=mysqli_query($db, $sql);
 		 
 		 return $result;	
