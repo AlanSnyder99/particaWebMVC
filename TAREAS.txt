@@ -1,5 +1,0 @@
-
-Cada vez que vota vuelve al listado.
-
-
-Solo mostrar el ganador cuando este finalizada
