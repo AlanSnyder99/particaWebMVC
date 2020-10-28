@@ -69,12 +69,11 @@ class User extends CI_Model {
 
     public function addSubmissions($nickname, $iframeCodeValidated, $idBattle){
         $number = count($nickname);         
-
         if ($number > 0) {          
-             for($i=0; $i<$number; $i++) {                  
-                $sql= "INSERT INTO submissions (id, battlesId, nickname, soundcloudLink, voteCount) VALUES (NULL, ".$idBattle.", '".mysqli_real_escape_string($db, $nickname[$i])."', '".mysqli_real_escape_string($db, $iframeCodeValidated[$i])."', NULL);";
+            for($i=0; $i<$number; $i++) {                  
+                $sql= "INSERT INTO submissions (id, battlesId, nickname, soundcloudLink, voteCount) VALUES (NULL, ".$idBattle.", '".$nickname[$i]."', '".$iframeCodeValidated[$i]."', NULL);";
                 $this->db->query($sql);
-             }          
+            }
         }
     }
 
@@ -110,8 +109,8 @@ class User extends CI_Model {
 
     public function validateIfCanReVote($idUser, $battleId){
         $maxVotes = 'SELECT *  FROM battles WHERE id = '. $battleId;
-        $maxVotesResult = $this->db->query($maxVotes);
-        $maxVotes = $maxVotesResult->row()->maxVotes;
+        $maxVotesRow = $this->db->query($maxVotes)->row();
+        $maxVotes = $maxVotesRow->maxVotes;
 
         $votesUser = 'SELECT * FROM votes as v
             INNER JOIN submissions as s 
@@ -149,44 +148,39 @@ class User extends CI_Model {
                 on v.submissionsId = s.id
                 WHERE v.userId = '.$idUser.' AND s.id = '.$submissionsId.'
                 ORDER BY v.id asc ';
-        $result = mysqli_query($db, $sql);
-        $rows=mysqli_fetch_assoc($result);
-        $idVotes = ($rows['idVotes']); 
-        $deleteSql = 'DELETE FROM votes WHERE votes.id = '.$idVotes.'';
-        mysqli_query($db, $deleteSql);
+        $query = $this->db->query($sql);
+        if($query) {
+            $deleteSql = 'DELETE FROM votes WHERE votes.id = '.($query->row())->idVotes;
+            $this->db->query($deleteSql);            
+        }
     }
 
-    public function validateVote($idUser,$idSubmission,$battleId){
-        $maxVotes = 'SELECT b.maxVotes FROM battles as b
+    public function validateVote($idUser, $idSubmission, $battleId){
+        $maxVotesSql = 'SELECT b.maxVotes FROM battles as b
                         INNER JOIN submissions as s 
                         on s.battlesId = b.id
                         INNER JOIN votes as v
                         on v.submissionsId = s.id
                         WHERE s.battlesId = '.$battleId.'
                         LIMIT 1';
+        $maxVotesRow = $this->db->query($maxVotesSql)->row();
+        $maxVotes = $maxVotesRow->maxVotes;
 
-        $maxVotesResult=mysqli_query($db, $maxVotes);   
-        
-        $rows=mysqli_fetch_assoc($maxVotesResult);
-
-        $maxVotes = ($rows['maxVotes']);
-
-        $votesUser = 'SELECT * FROM votes as v
+        $votesUserSql = 'SELECT * FROM votes as v
             INNER JOIN submissions as s 
             on v.submissionsId = s.id
             WHERE v.userId = '.$idUser.' AND s.battlesId  = '.$battleId;
-        $votesUserResult=mysqli_query($db, $votesUser); 
 
-        $countVotes = mysqli_num_rows ($votesUserResult);
+        $countVotes = $this->db->query($votesUserSql)->num_rows();
 
         if ($countVotes == 0) {
-            $sql2 = 'INSERT INTO votes (id, userId, submissionsId) VALUES (NULL, '.$idUser.', '.$idSubmission.')';
-            mysqli_query($db, $sql2);
+            $sql = 'INSERT INTO votes (id, userId, submissionsId) VALUES (NULL, '.$idUser.', '.$idSubmission.')';
+            $this->db->query($sql);
             echo "Vote Inserted";
         } elseif($countVotes > 0) {
             if ($countVotes < $maxVotes ) {
-                $sql3 = 'INSERT INTO votes (id, userId, submissionsId) VALUES (NULL, '.$idUser.', '.$idSubmission.')';
-                mysqli_query($db, $sql3);
+                $sql = 'INSERT INTO votes (id, userId, submissionsId) VALUES (NULL, '.$idUser.', '.$idSubmission.')';
+                $this->db->query($sql);
                 echo "Vote Inserted";            
              } else {
                 echo "Your maximum votes is complete";
@@ -205,6 +199,6 @@ class User extends CI_Model {
     public function searchBattle($idSubmission){
         $sql = 'SELECT * FROM submissions WHERE id = '.$idSubmission.' ';
         $query = $this->db->query($sql);
-        return $query->result();
+        return $query->row();
     }
 }

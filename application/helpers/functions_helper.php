@@ -36,6 +36,7 @@ function apiRequest($url, $post=FALSE, $headers=array()) {
   $ch = curl_init($url);
   curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
 
   $response = curl_exec($ch);
 
@@ -44,8 +45,8 @@ function apiRequest($url, $post=FALSE, $headers=array()) {
 
   $headers[] = 'Accept: application/json';
 
-  if($this->session('user_is_logged'))
-    $headers[] = 'Authorization: Bearer ' . $this->session('user_is_logged');
+  if($_SESSION['user_is_logged'])
+    $headers[] = 'Authorization: Bearer ' . $_SESSION['user_is_logged'];
 
   curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 

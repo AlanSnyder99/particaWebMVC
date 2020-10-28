@@ -3,21 +3,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Main extends CI_Controller {
 
-    /**
-     * Index Page for this controller.
-     *
-     * Maps to the following URL
-     *      http://example.com/index.php/welcome
-     *  - or -
-     *      http://example.com/index.php/welcome/index
-     *  - or -
-     * Since this controller is set as the default controller in
-     * config/routes.php, it's displayed at http://example.com/
-     *
-     * So any other public methods not prefixed with an underscore will
-     * map to /index.php/welcome/<method_name>
-     * @see https://codeigniter.com/user_guide/general/urls.html
-     */
     private $data;
 
     public function __construct() {
@@ -156,179 +141,63 @@ class Main extends CI_Controller {
 
         if ($_POST['action'] == 'publish') {
             $this->user->addBattlePublish($title, $samples, $tags, $maxVotes, $rules, $createdDate);
-            redirect(base_url('battleList'));
+            redirect(base_url('main/battleList'));
         } elseif ($_POST['action'] == 'draft') {
             $this->user->addBattleDraft($title, $samples, $tags, $maxVotes, $rules, $createdDate);
-            redirect(base_url('battleList'));
+            redirect(base_url('main/battleList'));
         } else {
-            redirect(base_url('newBattle'));
+            redirect(base_url('main/newBattle'));
         }
     }
 
-    function joinBattle(){
+    public function joinBattle(){
         $battleId = $_GET['id'];
         $email = $_GET['email'];
-        $validateState = $this->user->battleSubs($battleId);
-        $user = $this->user->searchUser($email);
-        $idUser = $user->id;
-        $votesGrafic = $this->user->votosGrafico($battleId);
-        $vote =  $this->user->validateIfCanReVote($idUser, $battleId);
-        $userVotes =  $this->user->userVotes($idUser);
-        $this->view->generateSt('battle.php',$battles, $battleSubs, $vote, $votesGrafic, $validateState, $userVotes);
+        $this->data["battleSubs"] = $this->user->battleSubs($battleId);
+        $idUser = $this->user->searchUser($email)->id;
+        $this->data["votesGrafic"] = $this->user->votosGrafico($battleId);
+        $this->data["vote"] =  $this->user->validateIfCanReVote($idUser, $battleId);
+        $this->data["userVotes"] =  $this->user->userVotes($idUser);
+        $this->layout->view('battle', $this->data);
     }
 
 
     public function vote(){
-            $idSubmission = $_GET['idSubmission']; //ID SUBMISSION DE VOTO
-            $email = $_GET['email']; // EMAIL DE EL QUE VOTA
-            $usuario = new Model_Usuario();
-            $user = $usuario->searchUser($email); //BUSCA EL USER QUE VOTA
+            $idSubmission = $_GET['idSubmission'];
+            $email = $_GET['email'];
+            $idUser = $this->user->searchUser($email)->id;
 
-            $rows = mysqli_fetch_assoc($user);
-            mysqli_free_result($user);
+            $battle = $this->user->searchBattle($idSubmission);
+            $idSubmissionValidate = $battle->id;
 
-            $idUser = $rows['id']; //USER ID
-
-            $userVotes =  $usuario->userVotes($idUser);
-            // print_r($userVotes);
-            // die();
-
-            $idSubmissionValidate = $usuario->searchBattle($idSubmission); //BUSCA LA SUBBMISSION
-
-            $rows3 = mysqli_fetch_assoc($idSubmissionValidate);
-            mysqli_free_result($idSubmissionValidate);
-
-            $idSubmissionValidate2 = ($rows3['id']); //USER ID
-
-            if ( $idSubmissionValidate2 == null ||  $idUser == null) {
-              echo'<script type="text/javascript">
-                    alert("Error");
-                    </script>';
-            $battles = $usuario->indexBattles();
-            $battlesNoVotes = $usuario->indexBattlesNoVotes();
-            $this->view->generateSt('index.php', $battles, $battlesNoVotes);
-
+            if ( $idSubmissionValidate == null ||  $idUser == null) {
+                echo'<script type="text/javascript">alert("Error");</script>';
+                redirect(base_url('main/index'));
             } else {
-
-                $battle = $usuario->searchBattle($idSubmission); //BUSCA LA BATALLA POR ID SUBMISSION
-
-                $rows2=mysqli_fetch_assoc($battle);
-
-                $idBattle = ($rows2['battlesId']); //TRAEL EL ID DE BATALLA DE LA SUBMISSION 
-
-                $battleId = $idBattle;
-
-                $battles = $usuario->oneBattles($battleId);
+                $battleId = $battle->battlesId;
                 
-                $battleSubs = $usuario->battleSubs($battleId); 
+                if (in_array($this->data["idStates"], [2,3])) {
+                    echo '<script type="text/javascript">alert("The battle is Finished");</script>';
+                } else {
+                    $this->user->validateVote($idUser,$idSubmission,$battleId);
 
-                $idStates =  $usuario->searchBattleWithId($battleId); 
-
-                $votesGrafic = $usuario->votosGrafico($battleId); //TRAE LOS VOTOS PARA EL GRAFICO
-                //SI NO HAY VOTOS NO TRAE NADA
-        
-
-                 $validateState = $usuario->battleSubs($battleId); //TRAE LOS SUBSMISSIONS PARA VALIDAR EL ESTADO DE LA BATALLA
-
-
-
-                 if ($idStates == 2 || $idStates == 3  ) {
-                   
-                  
-                    echo'<script type="text/javascript">
-                          alert("The battle is Finished");
-                          </script>';
-                      /*$battles = $usuario->allBattles();
-                      $battlesNoVotes = $usuario->allBattlesNoVotes();
-                   $this->view->generateSt('battleList.php',$battles, $battlesNoVotes);*/
-                   $this->view->generateSt('battle.php',$battles, $battleSubs, $vote, $votesGrafic, $validateState,  $userVotes);
-                 } else {
-
-
-                      $usuario->validateVote($idUser,$idSubmission, $battleId); //VALIDA EL VOTO Y VOTA
-
-                    
-                     $vote =  $usuario->validateIfCanReVote($idUser, $battleId);
-
-                       if ($vote == "false") {
-                          
-                             /* echo'<script type="text/javascript">
-                              alert("Thanks for vote, You cannot vote again");
-                              </script>';*/
-                                /*$battles = $usuario->allBattles();
-                            $battlesNoVotes = $usuario->allBattlesNoVotes();
-                         $this->view->generateSt('battleList.php',$battles, $battlesNoVotes);*/
-                              $this->view->generateSt('battle.php',$battles, $battleSubs, $vote,$votesGrafic, $validateState,  $userVotes);
-                      } else {
-                      
-                           /* echo'<script type="text/javascript">
-                              alert("You can vote more times");
-                              </script>';*/
-                                /*$battles = $usuario->allBattles();
-                      $battlesNoVotes = $usuario->allBattlesNoVotes();
-                   $this->view->generateSt('battleList.php',$battles, $battlesNoVotes);*/
-                              $this->view->generateSt('battle.php',$battles, $battleSubs, $vote, $votesGrafic, $validateState, $userVotes);
-                      }
-
-                 }
-
+                    $this->data["vote"] = $this->user->validateIfCanReVote($idUser,$battleId);
+                }
+                redirect(base_url('main/joinBattle?id='.$battleId."&email=".$email));
             }
-          
-
-            
-           
     }   
 
     public function changeVote(){
-
-        $usuario = new Model_Usuario();
         $battleId = $_GET['battleId'];
         $email = $_GET['email'];
         $submissionsId = $_GET['submissionsId'];
 
-        //free result y store result.
-
-        $user = $usuario->searchUser($email);
-
-        $rows=mysqli_fetch_assoc($user);
-
-        $idUser = ($rows['id']);
-  
-        $userVotes =  $usuario->userVotes($idUser); //
-       
-        $idStates =  $usuario->searchBattleWithId($battleId); 
-
-        $votesGrafic = $usuario->votosGrafico($battleId);
-
-        $validateState = $usuario->battleSubs($battleId); //Trae las submissions
-
-      
-        $idBattle =  $battleId;
-
-
-        $vote =  $usuario->validateIfCanReVote($idUser, $idBattle);
-
-
-        $battles = $usuario->oneBattles($battleId);
-
-
-        $battleSubs = $usuario->battleSubs($battleId);
-
-
-         if ($idStates == 2 || $idStates == 3  ) {
-            echo'<script type="text/javascript">
-                alert("The battle is Finished");
-                </script>';
-            $this->view->generateSt('battle.php',$battles, $battleSubs, $vote, $votesGrafic, $validateState, $userVotes);
-
-         } else {
-            $usuario->deleteVoteOfUser($idUser,  $battleId,  $submissionsId);
-            $this->view->generateSt('battle.php',$battles, $battleSubs, $vote, $votesGrafic, $validateState, $userVotes);
-
-         }
+        $idUser = $this->user->searchUser($email)->id;
+        if (in_array($this->data["idStates"], [2,3])) {
+            echo '<script type="text/javascript">alert("The battle is Finished");</script>';
+        } else {
+            $this->user->deleteVoteOfUser($idUser,$battleId,$submissionsId);
+        }
+        redirect(base_url('main/joinBattle?id='.$battleId."&email=".$email));
     }
-
-
-
-
 }

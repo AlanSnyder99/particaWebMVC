@@ -19,8 +19,7 @@
       <input class="bg-gray-800 rounded border border-gray-700 focus:outline-none focus:border-indigo-500 text-base text-white px-4 py-2 mb-4" name="samples" placeholder="Samples Link" type="text">
 		<input class="bg-gray-800 rounded border border-gray-700 focus:outline-none focus:border-indigo-500 text-base text-white px-4 py-2 mb-4" name="tags" placeholder="Enter Up To 3 Tags" type="text">
 		      <select name="maxVotes" class="bg-gray-800 rounded border border-gray-700 focus:outline-none focus:border-indigo-500 text-base text-white px-4 py-2 mb-4">
-      	<option style="--text-opacity: 1;
-    color: rgba(255,255,255,var(--text-opacity));" class="" value="1">Max Votes 1</option>
+      	<option style="--text-opacity: 1;color: rgba(255,255,255,var(--text-opacity));" class="" value="1">Max Votes 1</option>
       	<option value="2">Max Votes 2</option>
       	<option value="3">Max Votes 3</option>
       	<option value="4">Max Votes 4</option>
@@ -29,8 +28,5 @@
         </form>
       <a href="<?=base_url('main/battleList')?>" class="cancelBtn text-white py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">CANCEL</button>
     </div>
-
-
   </div>
-
 </section>

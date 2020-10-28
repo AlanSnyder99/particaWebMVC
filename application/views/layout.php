@@ -107,7 +107,7 @@
           $('#loader').addClass('activeLoader'); 
 
              $.ajax({  
-                  url:"/main/addSubmission",  
+                  url:"<?=base_url('/main/addSubmission')?>",  
                   method:"POST",  
                   data:$('#add_sub').serialize(),  
                   success:function(data)  

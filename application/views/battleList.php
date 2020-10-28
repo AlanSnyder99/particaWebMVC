@@ -23,98 +23,82 @@
         <tbody class="tbody">
 
 
-    <?php if(count($battlesNoVotes) >= 1){
-             foreach ($battlesNoVotes as $battle) {
-          echo "<tr>
-            <td class='px-4 py-3'>".$battle->title."</td>
-            <td class='px-4 py-3'>".$battle->createdDate."</td>
+    <?php if(count($battlesNoVotes) >= 1) {
+        foreach ($battlesNoVotes as $battle) { ?>
+          <tr>
+            <td class='px-4 py-3'><?=$battle->title?></td>
+            <td class='px-4 py-3'><?=$battle->createdDate?></td>
             <td class='px-4 py-3'>0</td>
-            <td class='px-4 py-3 text-lg text-white'>".$battle->state."</td>";
-            
-            if (($battles['idStates']) == 1 ){
-              echo "
-                  <td class='w-10 text-center'>
-                <a href='/main/joinBattle?id=".$battle->idBattle."&email=". $_SESSION["email"]."'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded join'>Join</button><a>
-                 </td>
-                   <td class='w-10 text-center'>
-                <a href='/main/finishBattle?id=".$battle->idBattle."'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded stop'>Finish</button><a>
-                 </td>
+            <td class='px-4 py-3 text-lg text-white'><?=$battle->state?></td>
+          <?php if ($battles['idStates'] == 1 ){ ?>
+              <td class='w-10 text-center'>
+                <a href='<?=base_url("/main/joinBattle?id=".$battle->idBattle."&email=". $_SESSION["email"])?>'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded join'>Join</button><a>
+              </td>
+              <td class='w-10 text-center'>
+                <a href='<?=base_url("/main/finishBattle?id=".$battle->idBattle)?>'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded stop'>Finish</button><a>
+              </td>
 
-              ";
-            } elseif (($battles['idStates']) == 2 ) {
-               echo "  <td class='w-10 text-center'>
-                <a href='/main/joinBattle?id=".$battle->idBattle."&email=". $_SESSION["email"]."'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded join'>Join</button><a>
-                 </td>
+          <?php } elseif ($battles['idStates'] == 2 ) { ?>
+              <td class='w-10 text-center'>
+                <a href='<?=base_url("/main/joinBattle?id=".$battle->idBattle."&email=". $_SESSION["email"])?>'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded join'>Join</button><a>
+              </td>
                  <td class='w-10 text-center'>
-               
                  </td>
-                 ";
-            } elseif(($battles['idStates']) == 3){
-               echo "
+          <?php } elseif($battles['idStates'] == 3){ ?>
                   <td class='w-10 text-center'>
-                <a href='/main/joinBattle?id=".$battle->idBattle."&email=". $_SESSION["email"]."'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded join'>Join</button><a>
+                <a href='<?=base_url("/main/joinBattle?id=".$battle->idBattle."&email=". $_SESSION["email"])?>'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded join'>Join</button><a>
                  </td>
                    <td class='w-10 text-center'>
-                <a href='/main/publishBattle?id=".$battle->idBattle."'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded publish'>Publish</button><a>
+                <a href='<?=base_url("/main/publishBattle?id=".$battle->idBattle)?>'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded publish'>Publish</button><a>
                  </td>
-
-              ";
-            }
-            echo "    <td class='w-10 text-center'>
-                <a href='/main/deleteBattle?id=".$battle->idBattle."'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded '>X</button><a>
-                 </td>";
-            echo "</tr>";
+          <?php } ?>
+              <td class='w-10 text-center'>
+                <a href='<?=base_url("/main/deleteBattle?id=".$battle->idBattle)?>'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded '>X</button><a>
+                 </td></tr>
+            <?php
 
         }
       }
     ?>
 
 
-         <?php if(count($battles) >= 1){
-              foreach ($battles as $battle) {
-          echo "<tr>
-            <td class='px-4 py-3 text-white'>".$battle->title."</td>
-            <td class='px-4 py-3 text-white'>".$battle->createdDate."</td>
-            <td class='px-4 py-3 text-white'>".$battle->subCount."</td>
-            <td class='px-4 py-3 text-lg text-white'>".$battle->state."</td>";
-            
-            if (($battle->idStates) == 1 ){
-              echo "
-                  <td class='w-10 text-center'>
-                <a href='/main/joinBattle?id=".$battle->idBattle."&email=". $_SESSION["email"]."'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded join'>Join</button><a>
-                 </td>
-                   <td class='w-10 text-center'>
-                <a href='/main/finishBattle?id=".$battle->idBattle."'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded stop'>Finish</button><a>
-                 </td>
+     <?php if(count($battles) >= 1){
+          foreach ($battles as $battle) { ?>
+      <tr>
+        <td class='px-4 py-3 text-white'><?=$battle->title?></td>
+        <td class='px-4 py-3 text-white'><?=$battle->createdDate?></td>
+        <td class='px-4 py-3 text-white'><?=$battle->subCount?></td>
+        <td class='px-4 py-3 text-lg text-white'><?=$battle->state?></td>
+      <?php if ($battle->idStates == 1 ){ ?>
+          <td class='w-10 text-center'>
+            <a href='<?=base_url("/main/joinBattle?id=".$battle->idBattle."&email=". $_SESSION["email"])?>'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded join'>Join</button><a>
+             </td>
+               <td class='w-10 text-center'>
+            <a href='<?=base_url("/main/finishBattle?id=".$battle->idBattle)?>'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded stop'>Finish</button><a>
+             </td>
+        <?php } elseif ($battle->idStates == 2 ) { ?>
+           <td class='w-10 text-center'>
+            <a href='<?=base_url("/main/joinBattle?id=".$battle->idBattle."&email=". $_SESSION["email"])?>'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded join'>Join</button><a>
+             </td>
+             <td class='w-10 text-center'>
+           
+             </td>
+        <?php } elseif($battle->idStates == 3){ ?>
+              <td class='w-10 text-center'>
+            <a href='<?=base_url("/main/joinBattle?id=".$battle->idBattle."&email=". $_SESSION["email"])?>'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded join'>Join</button><a>
+             </td>
+               <td class='w-10 text-center'>
+            <a href='<?=base_url("/main/publishBattle?id=".$battle->idBattle)?>'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded publish'>Publish</button><a>
+             </td>
+        <?php } ?>
+         <td class='w-10 text-center'>
+            <a href='<?=base_url("/main/deleteBattle?id=".$battle->idBattle)?>'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded '>X</button><a>
+             </td></tr>
+      <?php
+    }
+  }
 
-              ";
-            } elseif (($battle->idStates) == 2 ) {
-               echo "  <td class='w-10 text-center'>
-                <a href='/main/joinBattle?id=".$battle->idBattle."&email=". $_SESSION["email"]."'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded join'>Join</button><a>
-                 </td>
-                 <td class='w-10 text-center'>
-               
-                 </td>
-                 ";
-            } elseif(($battle->idStates) == 3){
-               echo "
-                  <td class='w-10 text-center'>
-                <a href='/main/joinBattle?id=".$battle->idBattle."&email=". $_SESSION["email"]."'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded join'>Join</button><a>
-                 </td>
-                   <td class='w-10 text-center'>
-                <a href='/main/publishBattle?id=".$battle->idBattle."'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded publish'>Publish</button><a>
-                 </td>
-
-              ";
-            }
-
-          echo "    <td class='w-10 text-center'>
-                <a href='/main/deleteBattle?id=".$battle->idBattle."'> <button  class='login flex ml-auto text-white bg-indigo-300 border-0 px-2 focus:outline-none hover:bg-indigo-400 rounded '>X</button><a>
-                 </td>";
-          echo "</tr>";
-        }
-      }
-    ?>
+?>
 
 
         </tbody>
@@ -123,11 +107,6 @@
 
     </div>
    <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
-     <!-- <a style="color: white" class="text-indigo-500 inline-flex items-center md:mb-2 lg:mb-0">Learn More
-        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-          <path d="M5 12h14M12 5l7 7-7 7"></path>
-        </svg>
-      </a>-->
       <a href="<?=base_url('/main/newBattle')?>" class="login flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">Create New Battle</a>
     </div>
   </div>
